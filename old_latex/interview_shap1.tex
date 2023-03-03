@@ -1,0 +1,106 @@
+\subsection{Interview version SHAP1}
+\begin{enumerate}
+    \item What would you describe as a good explanation? Phrased in a different way: what are the characteristics of a good explanation?
+
+    \item Here will follow some sentences. Your task is to create a prediction and explanation of that situation. First let the user give any answer they want. Then make them pick the words that are most indicative of your prediction. \begin{itemize}
+        \item "Road, garden and driveway officially flooded"
+        \item "Queensland counts flood cost as New South Wales braces for river peaks"
+        \item "Queensland does not deserve this flood trauma \& nightmare again. I hate it for them."
+        \item "Insurance Talk: Queensland flood claims exceed \$44.8 million, likely to hit \$52.1 million soon"
+        \item "Harsh country delivers harsh lessons: Fire, flood and other natural disasters are part of life in Australia"
+    \end{itemize}
+
+    \item Here will follow 3 sets of explanations. Your task is to select the best explanation from each set. \begin{enumerate}
+        \item Set 1: explanations that fit all principles except one: \begin{enumerate}
+            \item Fitting all. \begin{itemize}
+                \item Sentence to be explained: "Daring rescue of teenager from flood waters: Australia reels from surging floods";
+                \item Prediction: relevant;
+                \item Explanation: "rescue", "floods".
+            \end{itemize}
+            \item No fidelity. \begin{itemize}
+                \item Sentence to be explained: "New South Wales braces for river peaks as Queensland counts flood cost";
+                \item Prediction: relevant;
+                \item Explanation: "braces", "cost".
+            \end{itemize}
+            \item No compactness. \begin{itemize}
+                \item Sentence to be explained: "Baby stuffed in bag, hoisted from flood - Australia's powerful storms led to an amazing rescue of two women and a baby";
+                \item Prediction: relevant;
+                \item Explanation: "hoisted", "flood", "powerful storms", "amazing rescue", "baby", "stuffed", "bag".
+            \end{itemize}
+            \item No distinctiveness. \begin{itemize}
+                \item Sentence to be explained: "Gladstone flood victims returning home: Floodwaters are receding at Gladstone, in central Queensland";
+                \item Prediction: relevant;
+                \item Explanation: "flood".
+            \end{itemize}
+            \item No contrast. \begin{itemize}
+                \item Sentence to be explained: "If all you people are thirsty come drink some of the flood waters in Queensland";
+                \item Prediction: relevant;
+                \item Explanation: "drink", "waters".
+            \end{itemize}
+        \end{enumerate}
+        
+        \item Set 2: explanations that fit no principles except one: \begin{enumerate}
+            \item Fitting none. \begin{itemize}
+                \item Sentence to be explained: "Daring rescue of teenager from flood waters: Australia reels from surging floods";
+                \item Prediction: relevant;
+                \item Explanation: "Daring", "teenager", "reels", "surging".
+            \end{itemize}
+            \item Fidelity. \begin{itemize}
+                \item Sentence to be explained: "New South Wales braces for river peaks as Queensland counts flood cost";
+                \item Prediction: relevant;
+                \item Explanation: "river", "peaks", "flood", "cost".
+            \end{itemize}
+            \item Compactness. \begin{itemize}
+                \item Sentence to be explained: "Baby stuffed in bag, hoisted from flood - Australia's powerful storms led to an amazing rescue of two women and a baby";
+                \item Prediction: relevant;
+                \item Explanation: "amazing"
+            \end{itemize}
+            \item Distinctiveness. \begin{itemize}
+                \item Sentence to be explained: "Gladstone flood victims returning home: Floodwaters are receding at Gladstone, in central Queensland";
+                \item Prediction: relevant;
+                \item Explanation: "Gladstone", "returning", "receding".
+            \end{itemize}
+            \item Contrast. \begin{itemize}
+                \item Sentence to be explained: "If all you people are thirsty come drink some of the flood waters in Queensland";
+                \item Prediction: relevant;
+                \item Explanation: "people", "thirsty", "flood", "waters".
+            \end{itemize}
+        \end{enumerate}
+        
+        \item Set 3: explanations that fit some principles: \begin{enumerate}
+            \item Fidelity, contrast, distinctiveness. \begin{itemize}
+                \item Sentence to be explained: "Gladstone flood victims returning home: Floodwaters are receding at Gladstone, in central Queensland";
+                \item Prediction: relevant;
+                \item Explanation: "flood", "victims", "returning", "floodwaters", "receding".
+            \end{itemize}
+            \item Distinctiveness, compactness. \begin{itemize}
+                \item Sentence to be explained: "Australia seeks Army's help to tackle flood crisis, thousands evacuate";
+                \item Prediction: relevant;
+                \item Explanation: "army", "thousands".
+            \end{itemize}
+        \end{enumerate}
+    \end{enumerate}
+
+    \item Here will follow one explanation. Your task is to remember the explanation while you are doing another task. \begin{itemize}
+        \item Sentence to be explained: "Not long ago we were driving around Queensland marvelling at roadside poles showing high-water levels in the previous flood. Mind-boggling."
+        \item Prediction: relevant;
+        \item Explanation: "high", "water", "levels", "flood"
+    \end{itemize}
+    Now double the number 2 until the sum of the digits is 14 or larger.
+    Do you remember the explanation (first with, then without the sentence?
+    \todo{Write down which principles these explanations fit}
+    
+    \item And another explanation that you need to remember during another task. \begin{itemize}
+        \item Sentence to be explained: "Queensland floods: 3 dead, thousands isolated: Three people are now dead as Queensland’s flood crisis escalates."
+        \item Prediction: relevant;
+        \item Explanation: "floods", "dead", "crisis".
+    \end{itemize}
+    
+    \item Judging the principles, from your experience during this interview (yes/no/maybe/no idea): \begin{enumerate}
+        \item Would you say it is important for an explanation to be close to reality? [fidelity]
+        \item Would you say explanations need to be complete, meaning they need to explain many cases? [completeness]
+        \item Would you say short explanations are generally better than long ones? [compactness]
+        \item Would you say that, when explaining specific events, unique characteristics of that event should be used? [distinctiveness]
+        \item Would you say that explanations of a prediction should mention what would have to change to have a different prediction? [contrast]
+    \end{enumerate}
+\end{enumerate}

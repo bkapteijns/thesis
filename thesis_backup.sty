@@ -1,0 +1,849 @@
+% Deze template is gemaakt door Fons van der Plas (f.vanderplas@student.ru.nl) voor het publiek domein en mag gebruikt worden **zonder vermelding van zijn naam**.
+% This template was created by Fons van der Plas (f.vanderplas@student.ru.nl) for the public domain, and may be used **without attribution**.
+\documentclass{article}
+\usepackage[utf8]{inputenc}     % for éô
+\usepackage[english]{babel}     % for proper word breaking at line ends
+\usepackage[a4paper, left=1.5in, right=1.5in, top=1.5in, bottom=1.5in]{geometry}
+                                % for page size and margin settings
+\usepackage{graphicx}           % for ?
+\usepackage{amsmath,amssymb}    % for better equations
+\usepackage{amsthm}             % for better theorem styles
+\usepackage{mathtools}          % for greek math symbol formatting
+\usepackage{enumitem}           % for control of 'enumerate' numbering
+\usepackage{listings}           % for control of 'itemize' spacing
+\usepackage{todonotes}          % for clear TODO notes
+\usepackage{hyperref}           % page numbers and '\ref's become clickable
+
+\usepackage{pdflscape}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SET TITLE PAGE VALUES HERE %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%             ||               %
+%             ||               %
+%             \/               %
+
+\def\thesistitle{Evaluating as a human}
+\def\thesissubtitle{A functionally grounded evaluation approach to measuring human understanding}
+\def\thesisauthorfirst{Bram}
+\def\thesisauthorsecond{Kapteijns}
+\def\thesissupervisorfirst{Prof. Martha}
+\def\thesissupervisorsecond{Larson}
+\def\thesissecondreaderfirst{dr. Iris}
+\def\thesissecondreadersecond{Hendrickx}
+\def\thesisdate{June 2023}
+
+
+%             /\               %
+%             ||               %
+%             ||               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SET TITLE PAGE VALUES HERE %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% FOR PDF METADATA
+\title{\thesistitle}
+\author{\thesisauthorfirst\space\thesisauthorsecond}
+\date{\thesisdate}
+
+%% TODO PACKAGE
+\newcommand{\towrite}[1]{\todo[inline,color=yellow!10]{TO WRITE: #1}}
+
+%% THEOREM STYLES
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+
+%% MATH OPERATORS
+\DeclareMathOperator{\supersine}{supersin}
+\DeclareMathOperator{\supercosine}{supercos}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\begin{titlepage}
+	\thispagestyle{empty}
+	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+	\center
+	\textsc{\Large Radboud University Nijmegen}\\[.7cm]
+	\includegraphics[width=25mm]{img/in_dei_nomine_feliciter.eps}\\[.5cm]
+	\textsc{Faculty of Science}\\[0.5cm]
+	
+	\HRule \\[0.4cm]
+	{ \huge \bfseries \thesistitle}\\[0.1cm]
+	\textsc{\thesissubtitle}\\
+	\HRule \\[.5cm]
+	\textsc{\large Thesis BSc Computing Science}\\[.5cm]
+	
+	\begin{minipage}{0.4\textwidth}
+	\begin{flushleft} \large
+	\emph{Author:}\\
+	\thesisauthorfirst\space \textsc{\thesisauthorsecond}
+	\end{flushleft}
+	\end{minipage}
+	~
+	\begin{minipage}{0.4\textwidth}
+	\begin{flushright} \large
+	\emph{Supervisor:} \\
+	\thesissupervisorfirst\space \textsc{\thesissupervisorsecond} \\[1em]
+	\emph{Second reader:} \\
+	\thesissecondreaderfirst\space \textsc{\thesissecondreadersecond}
+	\end{flushright}
+	\end{minipage}\\[4cm]
+	\vfill
+	{\large \thesisdate}\\
+	\clearpage
+\end{titlepage}
+
+        
+\section*{Abstract}
+Evaluation approaches for explanation methods of machine learning can be classified as functionally-grounded (not involving humans) or human-grounded (involving humans). There is, however a discrepancy between those approaches: functionally-grounded evaluation approaches are biased toward the accuracy of explanations, while human-grounded evaluation approaches are biased toward understandability. This thesis tries to cross the bridge between these two different approaches by proposing a new functionally-grounded evaluation approach that also considers human understanding. It focuses on machine learning in natural language processing. \todo{Include what classifies as a good explanation (accuracy and understandability)}
+
+ This new evaluation approach is found in three steps. \todo{Is this the correct order?} First, the existing literature on evaluation approaches and social science literature on human understanding are investigated to get a rough idea of the principles. Then structured interviews are held to refine the principles and get a better understanding of human understanding in practice. Last, the principles are tested using existing data on human-grounded evaluation approaches.
+ \todo{What are the principles -> I can add a rough idea based on the principles from the literature research.}
+
+\newpage
+
+\tableofcontents
+
+\todo{Specify that it is in the disaster NLP domain}
+\todo{Specify that it is about interpretability methods (so post-hoc methods for black-box models)}
+
+\newpage
+\todo{I talk a lot about accuracy and understandability, but not so much about efficiency}
+
+\section{Introduction}
+Recent advances in the field of machine learning have made algorithms more accurate than humans in some instances, such as shown in \cite{Tschandl2019}. Consequently, it makes sense to implement machine learning in practice. In situations where there is little risk or the problem is sufficiently well-defined and studied, machine learning models can already be used to make predictions and decisions. However, in critical situations that are not completely formalized (such as in health care or finance), these models cannot be used yet \cite{Doshi2017}. 
+
+Machine learning models cannot be trusted in those situations and humans must make final decisions. Using a model's decisions requires humans to trust the decisions. Trusting a decision starts with understanding why it was made \cite{Schmidt2019}. However, the nature of many machine learning models is that they are very hard to understand. This is where interpretability comes in.
+
+Interpretability is the ability to explain to a human in understandable terms. Interpretability has more benefits than just trust. When we understand the predictions of machine learning implementations, we can identify biases or mistakes in those predictions. These biases and mistakes can then be fixed to improve the machine learning implementation (and get more trust in its predictions). Also, we can learn from machine learning. There may be unidentified correlations hidden in the data that the machine learning implementation has detected. These are discovered by interpreting the model \cite{Doshi2017}.
+
+Using inherently interpretable machine learning models is the easiest way to have interpretability, but using those models has drawbacks. Most notably, the complexity of the data patterns that these models can describe is usually limited \cite{Carvalho2019}. To increase predictive power, more complex models need to be used. In that case, we can resort to explaining the model using an interpretability method. An interpretability method brings forward an explanation of the more complex model.
+
+To judge interpretability methods, we can look at their three goals: accuracy, understandability, and efficiency \cite{Ruping2006}. Accuracy is about how much the explanation corresponds to the model; understandability is about how well humans can understand the explanation; efficiency is about how fast humans can understand the explanation. In this thesis the term understandability is used to refer to both understandability and efficiency.
+
+Whether an interpretability method meets those goals can be determined by an evaluation method. Some evaluation methods involve humans: the application- or human-grounded evaluation methods (which we will summarize as human-grounded evaluation methods). Others do not involve humans: the functionally grounded evaluation methods \cite{Doshi2017}. Because humans prefer simpler and more understandable explanations \cite{Gilpin2018}, human-grounded evaluation methods are generally biased towards understandability and efficiency. On the other hand, functionally grounded evaluation methods insufficiently measure understandability and efficiency. Besides, human-grounded evaluation methods require humans, which is expensive.
+
+That is where this thesis steps in. It develops an evaluation method that does not involve humans, but still measures understandability and efficiency to a satisfactory degree. The results are based on existing functionally grounded evaluation methods and knowledge of human understanding from the domain of social sciences. The evaluation method that this thesis proposes is a set of principles that judge understandability. To get to this set, a few questions are answered:
+\begin{itemize}
+    \item What is an explanation from a social scientific perspective?
+    \item How do humans understand explanations?
+    \item What are current functionally grounded evaluation methods?
+    %\item Why are current evaluation methods insufficient in measuring understandability of an explanation of a machine learning model? \todo{Do I actually answer this question? It is kind of answered in the intro already as well}
+    % \item What principles sufficiently measure understandability of an explanation of a machine learning model?
+    % \item How well do these principles work, compared to existing principles?
+    \item What functionally grounded evaluation principles can be extracted from the social sciences?
+    \item How can the functionally grounded evaluation methods be improved, according to laypeople?
+    \item How does the new functionally grounded evaluation method perform compared to other functionally grounded evaluation methods measured on existing human evaluation?
+\end{itemize}
+The first three questions are the basis for the bottom three and are answered in the literature research section. The rest of the paper answers the bottom three questions to create a new functionally grounded evaluation approach for interpretability methods that evaluates understandability. As hinted by the questions, the process of creating this approach takes three steps (as described in section 3). The first step is to create a draft of the evaluation method (section 4). This will depend heavily on the first three research questions, answered in the literature research (section 2). The second step is to refine the principles based on structured interviews (section 5). The third step is to validate the principles using existing data on human-grounded evaluation that already measure understandability, as mentioned earlier (section 6).
+
+Up to this point, functionally grounded evaluation methods have been sets of axioms that can evaluate explanations fully automatically. Instead of axioms, it would also be possible to train a machine learning model to predict whether an explanation is understandable or not. However, this model should be interpretable in order to be able to trust it (as argued earlier). This would mean it needs to be explained, creating an infinite regression (because that explanation needs to be evaluated by a model that needs to be explained, et cetera). Because of this, this thesis also sticks to a set of axioms. The axioms are also able to evaluate explanations fully automatically. If this would not be the case, the benefit of using the new method over human-grounded evaluation will be too little.
+
+This thesis focuses on evaluating the interpretability of natural language processing in the domain of natural disasters. 
+
+
+
+\section{Literature research}
+In this section, the first four questions from question list in the introduction are answered. These are: "What is an explanation?", "How do humans understand explanations?", "What are current functionally grounded evaluation methods?", and "Why are current evaluation methods insufficient in measuring understandability of an explanation of a machine learning model?".
+
+\subsection{What is an explanation (from humans)?}
+Before we look at the way interpretability methods explain machine learning models, we first look at how humans explain. When we, humans, want to explain an event - in the case of machine learning, the event is a prediction of a machine learning model -, we first identify the causes of this event (the cognitive process). This process results in some product, which is the actual explanation. This product then needs to be transferred from one person to the next: from the explainer to the explainee (the social process) \cite{Miller2019}. Let us now discuss these two processes and the product.
+
+\subsubsection{Cognitive process}
+Identifying the causes of an event consists of two steps in humans \cite{Miller2019}:
+\begin{itemize}
+    \item Causal connection: identifying the causes to an event using past knowledge;
+    \item Explanation selection: selecting a subset of all causes as the explanation of the event based on the pragmatic goals of the explanation.
+\end{itemize}
+
+\paragraph{Causal connection}
+There are two (partly overlapping) processes of attributing causes to an event: attributive reasoning and simulation. Abductive reasoning works as follows. The explainer thinks of multiple hypothetical causes for the event. These hypotheses are then tested using past evidence. It is analogous to the scientific method in the sense that you observe a phenomenon, create hypotheses for that phenomenon and get more confidence in that hypothesis as you observe more phenomena that confirm the hypothesis \cite{Miller2019}.
+
+Simulation is considering different counterfactuals to get a good explanation. Counterfactuals are situations that would have resulted from events that did not happen. Because people cannot simulate all counterfactual cases, we use heuristics to mutate some events. These mutated events are the counterfactuals that are considered in the (mental) simulation. The heuristics include \cite{Miller2019}:
+\begin{itemize}
+    \item Abnormality: when something is different from usual, it is often considered more mutable;
+    \item Temporality: people undo more recent than distant events (they are considered more mutable);
+    \item Controllability and intent: actions that are more controllable by deliberate actors are considered more mutable;
+    \item Social norms: socially inappropriate actions are considered more mutable.
+\end{itemize}
+
+\paragraph{Explanation selection} When people ask for an explanation, they generally ask the question “why does P hold?”. However, what they mean by this question is “why does P hold, instead of Q?”. Miller calls P the fact and Q the foil \cite{Miller2019}. Besides expecting an explanation for why the fact holds, the explainee implicitly expects an explanation for why the foil does not hold as well. An explanation that considers both the fact and the foil is a contrastive explanation. It is important that we make a correct assumption about what the foil is. Giving a complete explanation, where all possible foils are explained, will be too overwhelming for a human. So, we need to infer the foil(s) from the context, from human intuition, and from the tone of the explainee's question. People are very good at assuming what the foil is, but it can be hard for computers. When we know the foils, the best explanation highlights the highest number of differences between the fact and the foil \cite{Miller2019}.
+
+Besides differentiating between the fact and the foil there are several other (soft) criteria the explainer has for selecting causes for their explanation \cite{Miller2019}:
+\begin{itemize}
+    \item Abnormality: a common fact is hardly an explanation, but an abnormal situation is;
+    \item Intentionality and functionality: intentional actions are better than unintentional actions, but unintentional actions are better than natural causes when it comes to explanation quality;
+    \item Necessity, sufficiency, and robustness: necessary causes are preferred over sufficient causes. If a necessary cause was not the case, the event that is being explained cannot have happened, but if a sufficient case was not the case, the event that is being explained still could have happened. Robust causes, causes that explain multiple events, are desired;
+    \item Responsibility: a cause is more responsible when it has a higher effect on the event. Responsible causes are desired;
+    \item Preconditions, failure, and intentions: an action fails when its preconditions are not met. People usually prefer one explanation for failed actions. Mechanical explanations are better than intentional explanations, because failing is generally not intentional.
+\end{itemize}
+
+\subsubsection{Product}
+Now that we understand the process of how an explainer makes an explanation, we get to the next question: what is this explanation that they make? Generally speaking, an explanation is defined as an answer to a ‘why’-question that has an implicit inner ‘whether’-question. For example, consider the question “Why does P hold?”. This question has an implicit inter ‘whether’-question “Does P hold?” and the answer to this question is assumed to be “yes”.  As said in the end of the last question, the answer to that question (which is the explanation) is assumed to be contrastive: the explainee expects the explainer to explain why P holds, rather than something else \cite{Miller2019}.
+
+\paragraph{Intentional vs unintentional behavior }
+According to Malle, when humans explain behavior, we distinguish between intentional and unintentional behavior. When behavior is unintentional, we just offer causes of that behavior as an explanation. When behavior is intentional, there are three modes of explanations: reason explanations, causal history of reason explanations, and enabling factor explanations \cite{Miller2019}:
+\begin{itemize}
+    \item For reason explanations, we give the desires/beliefs/values that caused the actor to show the behavior in question;
+    \item For causal history of reason explanations, we give the background of the reasons for the behavior, for example, culture or personality traits. This mode of explanation can make the actor seem less rational;
+    \item For enabling factor explanations, we explain how the actions had the outcome it had.
+\end{itemize}
+Of course, machine learning instances do not have a culture, or desires. But the different explanation modes can be adapted for machine learning as well. For example, the causal history of reason explanation can explain that the machine learning implementation has a certain loss function it needs to minimize. However, it is important not to make the implementation sound irrational \cite{Miller2019}. 
+
+\paragraph{Scientific explanations}
+Overton presents a model for scientific explanations that can also be used for explaining machine learning predictions. It exists of five levels to describe an object. Scientific explanations have two characteristics according to Overton’s model: scientific explanations on one level need to refer to at least one other level; and explanations between levels must refer to all intermediate levels. Overton's model can also be used for XAI. There are the following levels \cite{Miller2019}:
+\begin{itemize}
+    \item Theories: sets of principles that justify models;
+    \item Models: abstractions of theories that model relationships between kinds and attributes;
+    \item Kinds: an abstract universal class that is instantiated by entities;
+    \item Entities: an instantiation of a kind that is measured by attributes;
+    \item Data: statements about activities (such as measurements or observations).
+\end{itemize}
+
+\paragraph{Typologies of explanations}
+In a different dimension of explanations, there are different typologies of explanations. Which type of explanation is best depends on the question. The typology of Aristotle considers four modes of explanation \cite{Miller2019}:
+\begin{itemize}
+    \item Material: an explanation considering the material of an object;
+    \item Formal: an explanation considering the form or shape of an object;
+    \item Efficient: an explanation considering who or what caused a change to the object;
+    \item Final: an explanation considering the end goal of an object.
+\end{itemize}
+Other typologies include that of Dennett, separating physical, design, and intention explanations; Marr (building on Poggio) separated computational, representational, and hardware explanations for explaining computational problems; and Kass and Leake proposed a classification of intentional, material, and social explanations. It is important to identify the type of question a human asks to give the right type of answer. But generally, functional explanations allow humans to generalize better than mechanical explanations. Inherent properties are generally better explanations than extrinsic explanations for formal explanations \cite{Miller2019}. 
+
+\subsubsection{Social process}
+Explanations are different from mere causal attributions in the sense that explanations are a social process. This means it involves a conversation between an explainer and an explainee. This explanation should convey the causes for an event, so a causal attribution is part of an explanation. The explanation should also be relevant to the question and be according to the rules of cooperative conversation \cite{Miller2019}.
+
+Grice has developed a model that describes how people engage in cooperative conversation. His model consists of four maxims \cite{Miller2019}:
+\begin{itemize}
+    \item Quality: your contribution to the conversation should be of high quality: it should be true. So do not say things that are false or have too little evidence;
+    \item Quantity: your contribution should be as informative as required, but not more informative than required;
+    \item Relation: your contribution should be relevant to the conversation. This is also related to quantity;
+    \item Manner: your contribution should not be obscure or ambiguous, but brief and orderly.
+\end{itemize}
+These are not hard criteria in the sense that a conversation cannot be cooperative if some of the principles are violated.
+
+\subsection{What is an explanation (from an interpretability method)?}
+The goal of an interpretability method is to explain a machine learning model or a prediction of that model. Interpretability methods do this in a variety of ways. In this section we will discuss a few taxonomies of interpretability methods. This section shows that there are multiple ways to achieve interpretability. The taxonomy by Vollert et al. will be used in this paper.
+
+The first taxonomy is by Carvalho et al. The authors define 4 different dimensions along which to divide interpretability methods \cite{Carvalho2019}.
+\begin{itemize}
+    \item First they separate pre-model, in-model, and post-model interpretability. Pre-model interpretability is achieved by interpreting the data before making the model (for example using visualization); in-model interpretability is achieved by using an inherently interpretable machine learning model, such that the explanation of the model is the model itself (for example decision trees are inherently interpretable: you can understand a decision tree's prediction by looking at it); post-model interpretability is achieved by using an interpretability method to explain the model. In this thesis we focus on the post-model interpretability.
+    \item Then they separate intrinsic vs post-hoc interpretability. Intrinsic interpretability is baked into the machine learning model and is achieved by reducing the complexity of that model; post-hoc interpretablity is achieved by applying interpretability methods that analyze the model. Intrinsic interpretability is associated with in-model interpretability and post-hoc interpretability is associated with post-model interpretability.
+    \item Third, model-specific vs model-agnostic interpretability. As the names imply, model-specific interpretability is inherent to one machine learning method; model-agnostic interpretability methods are not limited to one model but can explain any model. In-model interpretability is always model-specific; post-model interpretability can be both model-specific and model-agnostic, depending on the interpretability method that is used.
+    \item And last they differentiate between the different results an explanation can have. There are more results than only the four options given, but the four options cover most interpretability methods. The four different types of results are: \begin{itemize}
+        \item Feature summary: a statistical fact about features. This can be a single number per feature, explaining the feature importances, but it can also be a visualization of dependencies between features.
+        \item Model internals: the output for intrinsically interpretable machine learning models.
+        \item Data point: example-based interpretability methods explain predictions by showing other (potentially already existing) data points.
+        \item Surrogate intrinsically interpretable model: an inherently interpretable (local or global) model is trained to approximate the model to be explained.
+    \end{itemize}
+\end{itemize}
+
+Another taxonomy is given by Gilpin et al. The authors distinguish three types of models: processing models, representation models, and explanation-producing models. Processing models answer the question "why does this particular input lead to that particular output?"; representation models answer the question "What information does the network contain?"; explanation-producing models aim to simplify some aspect of their behavior (this can be processing, representation, or another aspect). Gilpin et al. give several options for processing, representation, and explanation-producing models \cite{Gilpin2018}:
+\begin{itemize}
+    \item Processing models: \begin{itemize}
+        \item Linear proxy methods: a linear (potentially local) model is trained such that it approximates the model to be explained. This model is then used as an explanation;
+        \item Decision trees: a decision tree is used as a proxy model and used as an explanation;
+        \item Automatic-rule extraction: a list of rules that explain the model;
+        \item Salience mapping: show which parts of the input have an effect on the output.
+    \end{itemize}
+    \item Representation models: \begin{itemize}
+        \item Role of layers: all information going through a layer is considered together;
+        \item Role of neurons: single neurons are considered individually;
+        \item Role of representation vectors: groups of single neurons are considered.
+    \end{itemize}
+    \item Explanation-producing models: \begin{itemize}
+        \item Attention networks: functions that show what and how information flows through the neural network;
+        \item Disentangled representations: describe independent meaningful factors of variation;
+        \item Generated explanations: the model learns to make "because"-sentences to explain predictions.
+    \end{itemize}
+\end{itemize}
+
+The last taxonomy that is discussed is made by Vollert et al. and is the taxonomy I will use in this thesis, because it fits this thesis the best: the typology focuses on the result of the interpretability method, rather than the method itself. And this thesis evaluates the explanation (the result of the interpretability method) rather than the method itself. Different post-hoc explanation methods are described \cite{Vollert2021}:
+\begin{itemize}
+    \item Visual explanations;
+    \item Example-based explanations;
+    \item Feature-relevance explanations;
+    \item Knowledge-extraction explanations.
+\end{itemize}
+
+\subsubsection{Visual explanations}
+Visual explanations use graphical plots to explain the model, for example, decision boundary plots.
+
+\subsubsection{Example-based explanations}
+Example-based explanations use another data point to explain a prediction. This other data point can be of the same or of a different class, depending on the interpretability method. It can also be a data point that did not exist in data yet.
+
+\subsubsection{Feature-relevance explanations}
+Feature-relevance explanations quantify the contribution of features. This can be combined with a visual representation.
+
+\subsubsection{Knowledge-extraction explanations}
+Knowledge-extraction explanations use an inherently interpretable model to approximate the black-box model.
+
+\subsubsection{Special cases}
+Because not all explanation methods fit directly in one of the types, in this section some edge cases are described.
+\begin{itemize}
+    \item Explanations in natural language are generally classified as either example-based, feature-relevance, or knowledge-extraction explanations in this thesis, depending on the content of the explanation. If the major contents of the explanation is similar examples, it is classified as an example-based explanations; when it details the different features, it is classified as a feature-relevance explanation; and when the model itself is explained, it is a knowledge-extraction explanation.
+    \item Combinations of different types can also occur. In those cases, we look at the intent of the explantion. \begin{itemize}
+        \item Imagine a graph of the feature relevances. The graph's function is likely just to show the feature relevances, so we classify the graph of feature relevances as a feature-relevance explanation.
+        \item Now imagine a list of examples, based on feature relevances. In this case, we used the feature relevances to find relevant data points. So we classify it as an example-based explanation (also if these examples are shown in a graph).
+        \item If we have a simple linear model that assumes feature independence, we can view this as both a knowledge-extraction explanation and a feature-relevance explanation (the weights of the features in the linear model can be seen as relevances). If the linear model is used to show which features have a big impact on the outcome of the black-box model, we count it as a feature-relevance explanation. If it is intended as a simplification of the black-box model, it is seen as a knowledge-extraction explanation.
+        \item Using a plot to show a knowledge-extraction explanation (for example plotting a decision tree or linear model) does not make it a visual explanation, because it is just a way of clearly giving a knowledge-extraction explanation.
+    \end{itemize}
+\end{itemize}
+
+\todo{explain different interpretability methods}
+
+
+\subsection{How do humans understand explanations?}
+People understand causes, not statistical relationships. Explaining a cause is more understandable than explaining a statistical relationship, which is more understandable than giving a statistical relationship as an explanation. When it comes to selecting these causes, the most likely cause is not always the best explanation. For example, when we want to explain why a house burned down, the most likely cause is that there was oxygen in the air. However, this is not a satisfactory explanation. A better explanation is that there was a gas leak. The probability that there was a gas leak is lower than the probability that there was oxygen in the air, but the practical implications from a gas leak are a lot greater. So, people evaluate explanations based on practical implications, rather than probability that explanations are correct.
+
+\subsubsection{Coherence, simplicity, and generality}
+
+In general, explanations are evaluated based on coherence, simplicity, and generality \cite{Miller2019}. Regarding coherence, Thagard says explanatory coherence is the ‘holding together’ of an explanation because of explanatory relations. Thagard distinguished four possibilities for coherence. Propositions P and Q cohere if there is an explanatory relation \cite{Thagard1989}:
+\begin{itemize}
+    \item P is part of the explanation of Q; or
+    \item Q is part of the explanation of P; or
+    \item P and Q are both part of the explanation of proposition R; or
+    \item P and Q are analogous in the explanations they give of propositions R and S, respectively.
+\end{itemize}
+Two propositions incohere if they contradict each other or are incompatible according to background knowledge. Thagard explains that if an explanation is coherent with someone's personal beliefs, that person confidently believes in the explanation. If an explanation is incoherent with someone's personal beliefs, that person does not believe the explanation \cite{Thagard1989}.
+
+Explanatory coherence can be seen as a relation between two propositions; as the property of several related propositions; or as a property of one proposition. But in the last case, we do not speak of coherence, but rather of acceptability. Acceptability is the degree to which a proposition is coherent with other propositions.
+
+Simplicity and generality (or breadth, as they call it) are discussed in the paper of Read and Marcus-Newhall. Generality states that (all things being equal) an explanation that explains more facts is more coherent and thus better than an explanation that explains fewer facts. An explanation that explains many facts is called broad and an explanation that few facts is called narrow. Simplicity is about the number of assumptions an explanation requires. The explanation that requires the fewest assumptions is the simplest \cite{Read1993}.
+
+\subsubsection{Leake's principles}
+
+Besides coherence, simplicity, and generality, Leake proposed nine metrics in four categories for evaluating explanations \cite{LEAKE1991}: 
+\begin{itemize}
+    \item Evaluating for predictions \begin{itemize}
+        \item Predictive power: a cause does not always have to imply the event. If we take the burning house again, having oxygen in the air does not always imply that houses burn down. “If all the rules connecting the causes to the outcome are predictive, the causes are considered predictive”;
+        \item Timeliness: when a cause is an early warning, rather than an indication that something is happening, it is timely. This is much more useful, because then we can recognize and influence the event before it happens the next time;
+        \item Distinctiveness: indicates whether a surprising event had a surprising cause (which can then be used as a prediction for that event);
+        \item Knowability: indicates how easy it is to know when the event occurred. There are three levels: observable, testable, and undetectable.
+    \end{itemize}
+    \item Evaluating for repair \begin{itemize}
+        \item Independence: indicates whether a cause is dependent on other causes;
+        \item Causal force: indicates whether a reason is a cause or just predictive of the event. For example, when explaining why a ball is red, saying all balls are red is not a cause, but it is still predictive of the color of the ball;
+        \item Repairability: do we know how to fix the cause of a problem?
+    \end{itemize}
+    \item Evaluation for control \begin{itemize}
+        \item Blockability: do we know how to avoid the cause of a problem?
+    \end{itemize}
+    \item Evaluation of actor's contributions \begin{itemize}
+        \item Desirability: did the actor want the outcome? Praise or blame can also be ascribed.
+    \end{itemize}
+\end{itemize}
+ 
+
+For this thesis, repairability and blockability are irrelevant, because changing the model is out of scope. Knowability is also irrelevant, because predictions of machine learning models are always straightforward, as far as I am aware. Desirability may be considered irrelevant, because machine learning models do not have a free will. But as Miller has said, attributing intention to models can still help human understanding \cite{Miller2019}, so desirability will still be considered.
+
+\subsubsection{Miller's principles} 
+In the paper of Carvalho et al., Miller's criteria for an understandable explanation are summarized as follows \cite{Carvalho2019}:
+\begin{itemize}
+    \item Contrastive: why doesn’t the model predict something else;
+    \item Selective: select only the main causes;
+    \item Social: take the target audience into account;
+    \item Focus on abnormal: mention rare reasons (when there are low odds for some input, it is abnormal);
+    \item Truthful: it makes sense in the real world;
+    \item Consistent: it is in conformation with prior beliefs;
+    \item General and probable: it explains many cases. \todo{elaborate}
+\end{itemize}
+
+\subsection{What are current evaluation methods?}
+Functionally grounded metrics are axioms or proxies along which interpretations are evaluated. According to Honegger, there are three conditions that the axioms need to meet to be appropriate: they need to be findable, applicable, and common practice \cite{Honegger2018}. Axioms are findable when we can find the axioms to compare different explanations, which I understand as the axioms having a basis in existing research; applicable when they are feasible to use in practice; and common practice when it is not strange to use them in the field of interpretability. \todo{Link them to different types of explanations}
+
+\subsubsection{Stability and fidelity}
+Two commonly used measures of interpretability are stability and fidelity of explanations \cite{Velmurugan2020}.
+\begin{itemize}
+    \item \textbf{Stability} is the degree to which similar data and predictions generate similar explanations. Stability can be measured in three ways, depending on the result of the interpretability method \cite{Kalousis2007}: \begin{itemize}
+        \item Stability by weight: when the explanation is a weighting of the features (each feature is associated with a weight or attribution to the prediction), the stability between two data points is Pearson's correlation coefficient between those two points;
+        \item Stability by rank: when the explanation is a ranking of the importance of the features, the stability is Spearman's correlation coefficient between two vectors $r$ and $r'$, where $r_i$ is the rank of feature $i$ in one data point and $r_i'$ is the rank of feature $i$ in the other data point;
+        \item Stability by subset: when the explanation is a subset of the important features, the stability is the Tanimoto distance between the two sets.
+    \end{itemize} 
+    \item \textbf{Fidelity} measures how ‘faithful’ an explanation is to the model, which is how well an explanation approximates the prediction. Two ways of measuring fidelity are defined: \begin{itemize}
+        \item External fidelity: measures the similarity of the decisions of the black-box model and the surrogate model;
+        \item Internal fidelity: measures whether the decision-making process is the same for the black box and surrogate model. This can be done by removing features and investigating what happens; by investigating the decision-making process of the surrogate (white box) model; using another explanation method on both the black box and surrogate model.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Identity, separability, and stability}
+Another set of functionally grounded metrics includes identity, separability, and stability \cite{Honegger2018}:
+\begin{itemize}
+    \item \textbf{Identity} states that identical objects should have identical explanations (so there should not be a random component in the interpretability method);
+    \item \textbf{Separability} means that non-identical objects should have non-identical explanations;
+    \item \textbf{Stability} states that similar objects should have similar explanations. It can be computed in the same way as in the other set of principles.
+\end{itemize}
+The author claims that these measures are “necessary but not sufficient to achieve interpretability,” although they should be used as soft criteria. The metrics have all been formalized in the paper of Honegger. However, studies such as \cite{Lertvittayakumjorn2019} show that LIME generates the best explanations in some tasks, while the method does not satisfy identity. Because of the inherent randomness of LIME, the method does not generate the same solution for two identical data points \cite{Honegger2018}.
+
+\subsubsection{Senstivity and implementation invariance}
+Other functionally grounded metrics include sensitivity and implementation invariance \cite{Sundararajan2017}:
+\begin{itemize}
+    \item \textbf{Sensitivity} has two types. \begin{itemize}
+        \item When two samples differ in only one attribute but have differing predictions, the attribution of that attribute should not be zero.
+        \item If a feature is not important for the prediction, its attribution should be zero.
+    \end{itemize}
+    \item \textbf{Implementation invariance} means if two models are trained on the same data and have the same predictions, the attributions should be the same for both models.
+\end{itemize}
+The authors have developed an interpretability method that satisfies the axioms sensitivity and implementation invariance: integral gradients. But \cite{Abeyagunasekera2022} found that in some cases “[integral gradients] isn’t intuitive as the LIME.” Efficiency (how fast humans can understand an explanation) is not considered by these metrics according to \cite{Carvalho2019}.
+
+\subsubsection{Completeness, correctness, and compactness}
+That last set of functionally grounded metrics that are discussed in this thesis contains completeness, correctness, and compactness \cite{Silva2018}:
+\begin{itemize}
+    \item \textbf{Completeness} indicates the degree to which the explanation can be used for other cases (so how much of the training set is covered by the explanation);
+    \item \textbf{Correctness} is about trust. It measures how many instances covered by the same explanation have the same label/prediction;
+    \item \textbf{Compactness} states that the explanation should be succinct. This can be the compressed size of an explanation.
+\end{itemize}
+
+
+
+
+
+\section{Methods}
+As said in the introduction, the aim of this thesis is to find a functionally grounded evaluation method that captures human understanding. This is achieved in three steps. First, literature research is done to make a hypothesis for the axioms that are in the method, based on literature from the social sciences and existing functionally grounded metrics. The method is then refined using structured interviews. And last, human-grounded evaluation data from other papers are used to validate the method.
+
+\subsection{Finding the principles in literature}
+From the literature research, functionally grounded axioms are compared to the principles for human understandability from social sciences. This is done in a table that is based mainly on the author's intuition. Existing axioms that covered the principles from the social sciences well, were put into the hypothesis for the new functionally grounded method. Some axioms are redefined for some explanation types such that they can be used for all explanations. New axioms were made for social science principles that were not taken into account by existing axioms. These were also written in such a few that they fit all four explanation types that were given in the literature research.
+
+\subsection{Refining the principles with interviews}
+After finding the principles in the literature, they are further explored with structured interviews. The aims of these interviews are to validate and adapt existing principles and to look for new principles. The questions that will be asked in those interviews are detailed in section 5.
+
+\subsection{Validating the principles with data}
+Our final product, the refined set of functionally grounded evaluation principles, is then tested using existing data. We used the survey data from Bell et al. \cite{Bell2022}. That data contains a survey with 257 good responses, across 2 data sets (housing and education), with four interpretations (decision tree, linear regression, SHAP over a black box model, and the black box model without SHAP) called System Alpha, System Beta, System Delta, and System Gamma in the survey. Questions from the survey include what the model would predict, which input feature is most likely to have caused this, some questions about understandability, and personal questions (e.g. experience in machine learning).
+
+In the paper by Bell et al. only System Alpha was described, so we compared only the two implementations of Systems Alpha (decision trees). This means we refined the functionally grounded evaluation principles for knowledge-extraction explanations. These explanations were judged on the principles found in the literature (the first part of the method). Then the resemblance between the functionally grounded evaluation and the human-grounded evaluation from the survey were tested. When the two evaluation methods (functionally and human-grounded) were too dissimilar, the functionally grounded principles were adapted to fit better with the human-grounded evaluation. \todo{In case there is not enough data, we hold a second set of interviews}
+
+\subsection{Prioritizing interpretability methods}
+Ideally, we would create and test our evaluation principles using all interpretability methods. However, due to time constraints, we need to focus on principles for only a couple of interpretability methods. In this section, I will prioritize interpretability methods from \cite{Carvalho2019} and \cite{Guidotti2018}, for each explanation type separately. This means that eventually we will get four prioritization (one for each type). Popularity, existing implementations, and representativeness for the explanation type.
+
+\subsubsection{Visual explanations}
+\begin{enumerate}
+    \item Partial dependence plot \cite{friedman2001}. With its main paper having 20600 citations on 23 January, partial dependence plots are popular visual explanations. The method generates plots that aim to give the user insight into the prediction of the machine learning model. There also exist implementations to make partial dependence plots already.
+\end{enumerate}
+
+\subsubsection{Example-based explanations}
+\begin{enumerate}
+    \item MMDCritic (prototypes and criticisms) \cite{kim2016examples}. This interpretability method can generate both similar and dissimilar examples with the same predictions. The MMDCritic method is not very well known with its main paper having 716 citations, however, other prototype and criticism methods exist. I deem these the most representative of example-based approaches, because the method just provides a similar (and a dissimilar) example. Because of this representativeness, it gets the highest priority among example-based explanations.
+    \item Counterfactual explanations \cite{Wachter2017}. Counterfactual explanations are example data points that are close to the datapoint to be explained but that have a different prediction. The method is relatively well known with 1679 citations. Especially considering the human sciences background given in the previous section (counterfactual explanations are one of the main ways humans make explanations), this method seems powerful.
+    \item Influence functions \cite{koh2017}. Influence functions change the input (the weight of training set samples or the samples themselves) to retrain the model. When making the same prediction with the newly trained model, the samples that affect the biggest change in the model impact the prediction the most. The method yields these data points so it is example based. It is relatively well known with the core paper having 2011 citations.
+\end{enumerate}
+
+\subsubsection{Feature-relevance explanations}
+\begin{enumerate}
+    \item SHAP (shapley values) \cite{Lundberg2017}. SHAP is a popular feature attribution method: the paper introducing SHAP has 10823 citations on 23 January. The actual Shapely values that SHAP computes are very computationally extensive, but ample approximations exist (such as LIME). Many have already been implemented, making it a time-efficient option for this thesis. SHAP is representative of the feature-relevance explanations
+    \item LIME (local surrogate model) \cite{Ribeiro2016WhyTrust}. LIME is also a popular feature attribution method - the paper has 11326 citations -, like SHAP. However, LIME is just a subset of different SHAP approximations. LIME is also representative of the feature-relevance explanation. However, according to Lundberg and Lee \cite{Lundberg2017} and Honegger \cite{Honegger2018} SHAP is better than LIME.
+\end{enumerate}
+
+\subsubsection{Knowledge-extraction explanations}
+\begin{enumerate}
+    \item Decision trees \cite{Guidotti2018}. Decision trees are interpretable models that are used in machine learning. Because of their inherent white-box nature, they can also be used as surrogate models for more complex black-box models, such as (deep) neural networks). Decision trees are representative of the knowledge-extraction explanations.
+    \item Anchors (decision rules) \cite{Ribeiro2018} Anchors are "sufficient conditions for predictions" presented in the form of if-then rules, which makes it a knowledge-extraction method. The paper introducing them has 1465 citations, so it is a relatively well-known method. Anchors are also representative of the knowledge-extraction explanations, but because decision trees can be represented more understandably (by plotting a tree, rather than listing the anchors), it has a higher priority. \todo{Idea: these can be generated using decision tree classifiers}
+\end{enumerate}
+
+\subsubsection{Interpretability methods}
+Given the prioritization from above, the methods that are going to be tested are SHAP, MMDCritic, decision trees, and partial dependence plots. This order is adhered to because of the expected applicability in NLP.
+
+
+
+\section{Principles from the literature}
+
+\subsection{Existing functionally grounded principles}
+In table \ref{tab:axiom_principles}, we can see which of the different principles from the social sciences are used in existing functionally grounded principles. Let us take the table's top-left (non-bold) cell that says "Coherence". In this case, it means that the axioms stability and fidelity can be used as a measure of coherence (but not for simplicity and generality).
+
+The results of the table are mainly based on my intuition, but an explanation of the table is given below.
+
+%\begin{landscape}
+\begin{table}[bh]
+    \hspace{-90}
+    \begin{tabular}{p{100}|p{100}|p{100}|p{100}|p{100}}
+        \textbf{Axioms} & \textbf{Coherence, simplicity, and generality} & \textbf{Leake's principles} & \textbf{Miller's principles} & \textbf{Honegger's principles} \\
+        \hline
+        \hline
+        \textbf{Stability and fidelity} & Coherence & Timeliness, predictive power, causal force & Consistent & Findable, applicable, common practice \\
+        \hline
+        \textbf{Identity, separability, and stability} & Coherence & Timeliness & Consistent & Findable, applicable, common practice \\
+        \hline
+        \textbf{Sensitivity and implementation invariance} & Coherence & Timeliness, predictive power, causal force, independence & Consistent & Applicable, common practice \\
+        \hline
+        \textbf{Completeness, correctness, and compactness} & Coherence, simplicity, generality & Timeliness, predictive power & Consistent, selective, general and probable & Applicable \\
+        \hline
+        \hline
+        Unused principles & & Distinctiveness, desirability & Constrastive, social, focus on abnormal, truthful & \\
+    \end{tabular}
+    \caption{What principles from the social sciences are captured in the axioms of current functionally grounded evaluation methods.}
+    \label{tab:axiom_principles}
+\end{table}\todo{rename miller's principles}
+%\end{landscape}
+
+\subsubsection{Stability and fidelity}
+\paragraph{Coherence, simplicity, and generality}
+Stability and fidelity make sure that the explanations of predictions of the model are as close as possible to what seems to happen inside the model. This means that the different explanations of predictions of the model are all explanations of the model itself, which means that those explanations are coherent [Thagard, 1989]. The axioms have no measure of the number of assumptions of explanations. Stability could be seen as a measure of generality, in the sense that similar explanations are used for similar data. But because the definition from [Read, Marcus-Newhall, 1993] says that generality is about one explanation explaining multiple scenarios, this is too much of a stretch.
+
+\paragraph{Leake's principles}
+The principles from Leake that are captured in the axioms of stability and fidelity are timeliness, predictive power, and causal force. When the explanations are faithful to the model, we can understand what caused the model to make the prediction. We can then also use the explanation to predict future predictions. For example, when a faithful explanation indicates that a high feature A indicates prediction X, we have reason to think a new prediction is X as well when we see a high A. When there is high fidelity, an explanation is very close to the model. So, that explanation is indicative of the prediction of the model (which implies predictive power). Distinctiveness is not measured, because there are no measurements for normality or abnormality. There is no measure of independence. Desirability is also not considered because there is no intentionality in these principles.
+
+\paragraph{Miller's principles}
+Explanations that satisfy stability and fidelity are consistent, because fidelity ensures that explanations are close to the model, which likely models the truth. Stability and fidelity cannot confirm the explanations are contrastive, because the principles do not consider the foil. Selectivity is also not measured, because the size of the explanation is not limited. The principles are the same for all audiences, so they are not social. There is no knowledge of normality or abnormality, so a focus on abnormality cannot be measured. The principles do not consider common knowledge, so truthfulness cannot be measured. They are also not general and probable, with similar reasoning of generality.
+
+\paragraph{Honegger's principles}
+Stability and fidelity are commonly used metrics as the [Velmurugan, Ouyang, Moreira, Sindhgatta, 2020] say. This means they are applicable (because they can be used) and common practice (because they are used commonly). Because they are used in papers before [Velmurugan, Ouyang, Moreira, Sindhgatta, 2020], they are also findable.
+
+\subsubsection{Identity, separability, and stability}
+\paragraph{Coherence, simplicity, and generality}
+Identity, separability, and stability are a proxy for coherence, because of the stability and identity axioms. When similar predictions get similar explanations, the explanations will play an analogous role in explaining those predictions. This is a form of coherence, according to [Thagard, 1989]. Using the same reasoning as for stability and fidelity, we can conclude that identity, separability, and stability also do not measure simplicity and generality.
+
+\paragraph{Leake's principles}
+Because of identity and stability, if we have data that is similar to existing data, we can use explanations for existing data to foresee predictions for the new data. This means the axioms are proxies for both timeliness (because we can guess the prediction before we know it) and predictive power. Because of separability, similar explanations mean similar data and predictions (the implication holds the other way around as well). Because if the data and predictions are not similar and the explanation is, then the explanations are not separable. The same reasoning from stability and fidelity, explaining why the other principles are not captured, hold for identity, separability, and stability as well.
+
+\paragraph{Miller's principles}
+Identity, separability, and stability are a proxy for consistency in the sense that explanations for similar instances need to be similar as well. The explanations then also fit with our ‘prior belief’ of a previous similar instance. For the same reasons as for stability and fidelity, the other principles also do not hold.
+
+\paragraph{Honegger's principles}
+Honegger himself claims that the principles are findable, applicable, and common practice [Honegger, 2018].
+
+\subsubsection{Sensitivity and implementation invariance}
+\paragraph{Coherence, simplicity, and generality}
+The sensitivity metric makes sure that different predictions do not get the same explanation. If the explanations were the same, they would have been incoherent. In that sense sensitivity is a proxy for coherence. There is no measure of simplicity. It could be argued that implementation invariance is a measure of generality: the same explanation can be used across different models, so it explains different predictions. However, in this thesis we see generality as explaining different predictions of one model.
+
+\paragraph{Leake's principles}
+Sensitivity states that if there is a difference between two predictions in one input feature, then that difference must be caused by that input feature. This is a proxy for causal force. We also know that this feature (or cause) does not depend on other features, because it changed without other features changing. This means sensitivity is also a proxy for independence. Because sensitivity and implementation invariance do not measure how close an explanation is to the model or previous explanations, the axioms are no proxies for timeliness and predictive power. Desirability and distinctiveness are not measured, for the same reasons as for the previous axioms.
+
+\paragraph{Miller’s principles}
+One of the criteria for sensitivity is that if a prediction does not depend on a feature, its attribution should be zero. This feature's attribution is then zero for all explanations. In that sense sensitivity measures consistency. For the same reasons as previous exercises, explanations fitting sensitivity and implementation invariance are not necessarily contrastive, selective, general and probable, social, or truthful and they do not necessarily focus on abnormality.
+
+\paragraph{Honegger's principles}
+Although the principles do make sense, the authors have not directly provided scientific research validating the sensitivity and implementation invariance axioms. This means they are not findable. Sensitivity and implementation invariance can be tested by checking all predictions, so the axioms are applicable. The paper presenting the axioms by [Sundararajan, Taly, Yan, 2017] has over 3300 citations. This is a good indication that the principles are common practice.
+
+\subsubsection{Completeness, correctness, and compactness}
+\paragraph{Coherence, simplicity, and generality}
+The combination of completeness and correctness measures coherence. If the explanation for one prediction explains more predictions and these explanations are correct, the explanation better explains the model. If all explanations are as complete and correct as possible, then they all explain a part of the model correctly and they are coherent. Compactness measures simplicity, because the more compact an explanation is, the fewer reasons it can use. The combination of completeness and correctness also explains generality, because if an explanation is complete and correct, then it can be used for many predictions. This means it is general.
+
+\paragraph{Leake's principles}
+Completeness and correctness show how close an explanation is to the other predictions. This increases the accuracy of that explanation and shows it is closer to the model. If an explanation is correct, we can predict the predictions of the model for datapoints it has not seen yet, so the principles measure timeliness and predictive power. Causal force is not measured, because we do not know if the reasons found are the causes for the model or just correlations. There is no measure for independence, distinctiveness, or desirability in completeness, correctness, or compactness. We could even argue that completeness hinders the measurement of distinctiveness, because distinctive explanations (that explain only a few cases, but accurately) are considered worse than general explanations.
+
+\paragraph{Miller's principles}
+Explanations are selective because of the combination of compactness and correctness. The more compact and explanation (the fewer reasons/simpler), the better. But to ensure we pick only the most accurate reasons, we have correctness. Explanations are also general and probable, using the same reasoning as for the generality principle. Because completeness and correctness measure how many predictions are in accordance with an explanation, consistency is also measured: it is consistent with prior predictions/beliefs. For the same reasons as the other principles, explanations are not measured to be contrastive, social, focusing on abnormalities, or truthful.
+
+\paragraph{Honegger's principles}
+The authors have not directly provided scientific research backing the axioms, so they are not findable. The axioms are applicable, as the authors have shown, although they are not very useful for all explanations. Some explanations are given in the form of feature attributions, but they are specific for each case (so completeness and correctness cannot be measured). The axioms are not common practice, because the paper only has 13 citations and the axioms are quite unique compared to the other measures presented.
+
+\subsection{The new principles}
+From the table and its explanation, we can copy a few axioms of the existing functionally grounded methods that can be used as proxies for the principles from social sciences. For the principles from the social sciences that were not used, new axioms were created. These is the hypothesis of axioms, based on the literature:
+\todo{Explain how they will be measured}
+
+\begin{itemize}
+    \item Fidelity: how close is the explanation to the model? Measures the principles coherence, timeliness, predictive power, causal force, and consistency;
+    \item Completeness: how many data points are explained by the explanation? Measures the principles generality, and generality and probability;
+    \item Compactness: how large is the explanation? Measures the principles simplicity, and selectivity;
+    \item Distinctiveness: how unique are the causes? Measures the principles distinctiveness, and focus on abnormality;
+    \item Contrast: how contrastive is the explanation (so you understand why the model did not predict something else)? Measures the principle contrastivity.
+\end{itemize}
+
+The way these principles can be measured depends on the interpretability method used. We use the taxonomy of Vollert et al. \cite{Vollert2021} to propose different measurements of the principles.
+
+\subsubsection{Visual explanations}
+Different types of visual explanations exist. Some examples of visual explanations are: heatmaps over the original data, partial dependence plots, and visualizations of feature importances. Due to this variety, visual explanations are not considered in this thesis.
+
+
+\subsubsection{Example-based explanations}
+An example-based explanation can have two types. Either the example shows a similar example that confirms the prediction, or the example shows a counterfactual example that explains why the prediction was not something else.
+
+\paragraph{Fidelity} can be similar to the correctness measure from Silva et al. \cite{Silva2018}. The prediction to be explained is called $p$. Let us call the distance between $p$ and the explanation $d$. And let us define the set $S$ containing all data points (from the training set) that have distance $d$ or less to the example data point. To compute the fidelity, we first need to know whether we have a similar or counterfactual example. When the explanation is a similar example, the fidelity is the percentage of $S$ that has the same prediction as $p$. If it is a counterfactual example, the fidelity is the percentage of $S$ that has a differing prediction from $p$. If we have multiple examples in the explanation, we take the average of the fidelity for each example.
+
+\paragraph{Completeness} can be similar to the completeness measure from Silva et al. \cite{Silva2018}. Let us again define $p$, $d$, and $S$, like we did for measuring fidelity. Now completeness is the number of elements in $S$. If there are multiple examples in the explanation, then we take the average completeness for each example.
+
+\paragraph{Compactness} can be defined as the number of examples used.
+
+\paragraph{Distinctiveness} is a little different in this example, because all features are used for an explanation. In this case we use the size of $d$ (as defined in fidelity) as distinctiveness. When an example is closer, it highlights the uniqueness of the prediction to be explained (as less general examples are taken).
+
+\paragraph{Contrast} can be measured as the existence of both counterfactual and similar examples.
+
+
+\subsubsection{Feature-relevance explanations}
+
+\paragraph{Fidelity} Velmurugan et al. describe multiple ways of measuring fidelity \cite{Velmurugan2020}. Because in this case we do not have a surrogate model as an explanation, the only suitable measurement is the following: change features in the explanation one at a time and for each change run the model again too see how it impacts the prediction. The more a prediction changes with changing features, the higher the feature relevance should be. The drawback of this method is that it assumes feature independence. However, because testing all feature combinations is computationally too expensive, this is still the best option.
+
+\paragraph{Completeness} Feature-relevance explanations are only applicable to one single prediction. This means the completeness axiom is not applicable in this case.
+
+\paragraph{Compactness} For feature-relevance explanations, compactness can easily be defined as the number of features that are used in the explanation plus the number of interactions (if present). For example, if we have three features $a$, $b$, and $c$ that are assumed to be independent, compactness is three. But if these features all interact together linearly, we have components $a$, $b$, $c$, $ab$, $ac$, $bc$, and $abc$, so the compactness is seven.
+
+\paragraph{Distinctiveness} Explanations are distinctive if they use unique features. A feature is unique if it has a value it has in only a few cases. If a feature is more unique it should have a higher attribution (both positive and negative). The way this is measured is: the values of the features are ranked on uniqueness. This means the value of a feature is compared to the values of other features and the further it deviates from the center value, the higher the uniqueness of that feature. The distinctiveness of the explanation can then be measured by quantifying the uniqueness of the features.
+
+\paragraph{Contrast} An explanation is contrastive if its features are not close to the 'edge' of predicting something else.
+
+
+\subsubsection{Knowledge-extraction explanations}
+
+\paragraph{Fidelity} can be measured by feeding data points into both the black box and white box model. These can be data points with random feature values or existing data points from a training data set. The fidelity is then the percentage of data points that have the same prediction for both the black box and white box model. For local models a weight should be attached to each data point to calculate the percentage. This weight is based on the distance to the prediction to be explained.
+
+\paragraph{Completeness} is irrelevant, because all data points can be fed into the model.
+
+\paragraph{Compactness} as found by Silva et al. \cite{Silva2018} can be defined as the compressed size of the explanation.
+
+\paragraph{Distinctiveness} can be measured in the same was as for feature-relevance explanations. Using a feature in this explanation class means using it in the white box model.
+
+\paragraph{Contrast} knowledge-extraction explanations are always contrastive, because both similar and counterfactual examples can be predicted with the white box model.
+
+
+
+
+
+\section{Principles from human experiments}
+
+\subsection{Why interviews}
+\todo{Make this section more scientific and fact-check}
+In this thesis, we have chosen to perform our human experiments in the form of interviews. This allows us to go into more detail on the thought processes of the participants. A benefit of questionnaires would be that they can test a bigger number of subjects. This may hint at some specific ways in which some particular people understand explanations. While this is very interesting, it is not the aim of this thesis. In this thesis, the aim is to find principles that judge whether people understand an explanation that holds in general. The principles should be fitted to the way most people understand explanations. This means including a large number of participants is less important than getting into depth on the understandability of the explanations.
+
+\subsection{Questions + prioritization}
+Below is a prioritized list of question types. The first question type is the most important, the last type is the least important. 
+\begin{enumerate}
+    \item \textbf{Which explanation is better?} - The participant will get multiple explanations that fit different principles. \todo{These principles include principles from different functionally grounded methods to test whether the new ones work better.} The participant then needs to make a judgement on which explanation is the best and which is the worst. Having the participant give us a ranking of the explanations would give us more information, however, this will give too inconsistent results. Asking the same participant to rank the explanations twice, will likely give us different rankings. Having the participant select the best and worst explanation still gives the participant's clear preference for principles. The comparison between explanations makes the result more dependable.
+    \item \textbf{Replicate this explanation} - An explanation is shown to the participant that they can study. They are then given a different task as a distraction. After that task, they are asked to replicate the explanation. When an explanation is more understandable, it is expected to be easier to remember. Craik and Lockhart state that "later stages [of perception] are concerned with pattern recognition and the extraction of meaning." The depth of processing is defined to be the number of layers of perception that are involved. They state that a greater depth of processing "implies a greater degree of semantic or cognitive analysis" and a greater depth of processing implies a stronger memory trace \cite{craik1972levels}. This question/task is preferred because it removes a lot of subjectivity from the user. It objectively shows whether the explanation is good or not. This method should be used as a comparison to decrease insecurity and variety between people.
+    \item \textbf{Would you say principle X helps you understand explanations?} - The participant is directly asked whether they think a principle is good. The importance of principles from both existing as well as new evaluation methods is asked. There will be a lot of subjectivity and differences between participants because the term 'important' is very vague. But because the que stion can be answered in very little time, the limited benefit is worth the cost.
+    \item \textbf{How would you describe a good explanation?} - The participant is asked to come up with principles. When the principles proposed in this thesis are mentioned often by the participants, the principles gain credibility. This question can be answered quickly.
+    \item \textbf{Create an explanation} - The participant is asked to create an explanation to see what principles fit their explanation. Humans are expected to give understandable explanations. If the principles are correct, the explanations from participants should also fit them.
+    \item \textbf{How would you improve this explanation?} - The participant is given one explanation (fitting some of the principles) and the question of how to improve this explanation. If they (indirectly) mention one of the principles in their improvements, the principle gets credibility.
+    \item \textbf{What process did you use to understand the explanation?} - The participant is given an explanation with an associated task and is asked to explain their thinking process. The participant is expected to show which parts of the explanation are important and how they use them in order to reason. This may give us indirect information on what principles are important for their thinking process.
+    \item \textbf{What do you like about the explanation?} - The participant is given an explanation and asked what they like about it. They can mention the principles in their judgment.
+\end{enumerate}
+
+Besides these questions, it is important to get some personal information on the participants:
+\begin{itemize}
+    \item What is your current experience with machine learning? - Background knowledge of participants can impact results.
+    \item What is your current experience with floods and flood-related text? - Background knowledge of participants can impact results.
+\end{itemize}
+
+\subsection{Interview version SHAP1}
+\begin{enumerate}
+    \item What would you describe as a good explanation? Phrased in a different way: what are the characteristics of a good explanation?
+
+    \item Here will follow some sentences. Your task is to create a prediction and explanation of that situation. First let the user give any answer they want. Then make them pick the words that are most indicative of your prediction. \begin{itemize}
+        \item "Road, garden and driveway officially flooded"
+        \item "Queensland counts flood cost as New South Wales braces for river peaks"
+        \item "Queensland does not deserve this flood trauma \& nightmare again. I hate it for them."
+        \item "Insurance Talk: Queensland flood claims exceed \$44.8 million, likely to hit \$52.1 million soon"
+        \item "Harsh country delivers harsh lessons: Fire, flood and other natural disasters are part of life in Australia"
+    \end{itemize}
+
+    \item Here will follow 3 sets of explanations. Your task is to select the best explanation from each set. \begin{enumerate}
+        \item Set 1: explanations that fit all principles except one: \begin{enumerate}
+            \item Fitting all. \begin{itemize}
+                \item Sentence to be explained: "Daring rescue of teenager from flood waters: Australia reels from surging floods";
+                \item Prediction: relevant;
+                \item Explanation: "rescue", "floods".
+            \end{itemize}
+            \item No fidelity. \begin{itemize}
+                \item Sentence to be explained: "New South Wales braces for river peaks as Queensland counts flood cost";
+                \item Prediction: relevant;
+                \item Explanation: "braces", "cost".
+            \end{itemize}
+            \item No compactness. \begin{itemize}
+                \item Sentence to be explained: "Baby stuffed in bag, hoisted from flood - Australia's powerful storms led to an amazing rescue of two women and a baby";
+                \item Prediction: relevant;
+                \item Explanation: "hoisted", "flood", "powerful storms", "amazing rescue", "baby", "stuffed", "bag".
+            \end{itemize}
+            \item No distinctiveness. \begin{itemize}
+                \item Sentence to be explained: "Gladstone flood victims returning home: Floodwaters are receding at Gladstone, in central Queensland";
+                \item Prediction: relevant;
+                \item Explanation: "flood".
+            \end{itemize}
+            \item No contrast. \begin{itemize}
+                \item Sentence to be explained: "If all you people are thirsty come drink some of the flood waters in Queensland";
+                \item Prediction: relevant;
+                \item Explanation: "drink", "waters".
+            \end{itemize}
+        \end{enumerate}
+        
+        \item Set 2: explanations that fit no principles except one: \begin{enumerate}
+            \item Fitting none. \begin{itemize}
+                \item Sentence to be explained: "Daring rescue of teenager from flood waters: Australia reels from surging floods";
+                \item Prediction: relevant;
+                \item Explanation: "Daring", "teenager", "reels", "surging".
+            \end{itemize}
+            \item Fidelity. \begin{itemize}
+                \item Sentence to be explained: "New South Wales braces for river peaks as Queensland counts flood cost";
+                \item Prediction: relevant;
+                \item Explanation: "river", "peaks", "flood", "cost".
+            \end{itemize}
+            \item Compactness. \begin{itemize}
+                \item Sentence to be explained: "Baby stuffed in bag, hoisted from flood - Australia's powerful storms led to an amazing rescue of two women and a baby";
+                \item Prediction: relevant;
+                \item Explanation: "amazing"
+            \end{itemize}
+            \item Distinctiveness. \begin{itemize}
+                \item Sentence to be explained: "Gladstone flood victims returning home: Floodwaters are receding at Gladstone, in central Queensland";
+                \item Prediction: relevant;
+                \item Explanation: "Gladstone", "returning", "receding".
+            \end{itemize}
+            \item Contrast. \begin{itemize}
+                \item Sentence to be explained: "If all you people are thirsty come drink some of the flood waters in Queensland";
+                \item Prediction: relevant;
+                \item Explanation: "people", "thirsty", "flood", "waters".
+            \end{itemize}
+        \end{enumerate}
+        
+        \item Set 3: explanations that fit some principles: \begin{enumerate}
+            \item Fidelity, contrast, distinctiveness. \begin{itemize}
+                \item Sentence to be explained: "Gladstone flood victims returning home: Floodwaters are receding at Gladstone, in central Queensland";
+                \item Prediction: relevant;
+                \item Explanation: "flood", "victims", "returning", "floodwaters", "receding".
+            \end{itemize}
+            \item Distinctiveness, compactness. \begin{itemize}
+                \item Sentence to be explained: "Australia seeks Army's help to tackle flood crisis, thousands evacuate";
+                \item Prediction: relevant;
+                \item Explanation: "army", "thousands".
+            \end{itemize}
+        \end{enumerate}
+    \end{enumerate}
+
+    \item Here will follow one explanation. Your task is to remember the explanation while you are doing another task. \begin{itemize}
+        \item Sentence to be explained: "Not long ago we were driving around Queensland marvelling at roadside poles showing high-water levels in the previous flood. Mind-boggling."
+        \item Prediction: relevant;
+        \item Explanation: "high", "water", "levels", "flood"
+    \end{itemize}
+    Now double the number 2 until the sum of the digits is 14 or larger.
+    Do you remember the explanation (first with, then without the sentence?
+    \todo{Write down which principles these explanations fit}
+    
+    \item And another explanation that you need to remember during another task. \begin{itemize}
+        \item Sentence to be explained: "Queensland floods: 3 dead, thousands isolated: Three people are now dead as Queensland’s flood crisis escalates."
+        \item Prediction: relevant;
+        \item Explanation: "floods", "dead", "crisis".
+    \end{itemize}
+    
+    \item Judging the principles, from your experience during this interview (yes/no/maybe/no idea): \begin{enumerate}
+        \item Would you say it is important for an explanation to be close to reality? [fidelity]
+        \item Would you say explanations need to be complete, meaning they need to explain many cases? [completeness]
+        \item Would you say short explanations are generally better than long ones? [compactness]
+        \item Would you say that, when explaining specific events, unique characteristics of that event should be used? [distinctiveness]
+        \item Would you say that explanations of a prediction should mention what would have to change to have a different prediction? [contrast]
+    \end{enumerate}
+\end{enumerate}
+
+
+
+
+
+\section{Principles from the data}
+Only one out of the four explanations in the survey from Bell et al. \cite{Bell2022} were given in their paper: System Alpha. System Alpha uses a decision tree as an explanation. In this section, we will explain which of our new functionally grounded principles fit the explanation and whether they are good predictors of the understandability.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{img/bell_system_alpha_education.png}
+    \caption{System Alpha's explanation for predictions based on the education data set. From Bell et al.}
+    \label{fig:bell_alpha_education}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{img/bell_system_alpha_housing.png}
+    \caption{System Alpha's explanation for predictions based on the housing data set. From Bell et al.}
+    \label{fig:bell_alpha_housing}
+\end{figure}
+
+\subsection{Which principle fit}
+Images \ref{fig:bell_alpha_education} \ref{fig:bell_alpha_housing} are taken directly from the study from Bell et al. \cite{Bell2022}.
+\begin{itemize}
+    \item Fidelity: fidelity is maximal because it is both the explanation and the model to be explained.
+    \item Completeness: irrelevant as it is maximal.
+    \item Compactness: both models are compact because they have only 7 labels and 6 relations. Especially graphically it is very clear what the relations are.
+    \item Distinctiveness: irrelevent, because this explanation explains the full model.
+    \item Contrast: both models are contrastive, because they both clearly state when an input results in one class and when it results in the other.
+\end{itemize}
+
+Both models from Bell et al. fit all functionally grounded principles, however, the human-grounded data shows us that the housing model is less understandable than education model. Besides self-reporting of understanding, the survey contains two tasks that show human understanding. The first task is determining the prediction of the model; the second task is determining which feature has the highest importance. Especially in task 2, the housing data tasks performed way worse than the education data (images \ref{fig:bell_q1_performance} and \ref{fig:bell_q2_performance}).
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{img/bell_q1_performance.png}
+    \caption{Humans' performance on guessing the model's prediction. From Bell et al.}
+    \label{fig:bell_q1_performance}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{img/bell_q2_performance.png}
+    \caption{Human's performance on guessing the model's prediction. From Bell et al.}
+    \label{fig:bell_q2_performance}
+\end{figure}
+
+% \subsection{Adaptations to the principles}
+% From the decision trees that were given as an explanation, we can see that the difference between the two decision trees. For the decision tree on housing data, we can see that on the left branch both options are "Not high priced", regardless of the size of the living area. This seems to be the cause for the discrepancy between the education and housing data performance: the rest of the decision trees are practically identical for both data sets.
+
+% To account for this discrepancy, we can change the functionally grounded principle 'contrast.' Knowledge-extraction explanations are then contrastive when there are multiple options and these options are not all be the same. The way we quantify this is by saying that for each set of options (e.g. one set of options is the set of branches after a node in a decision tree), if they are all the same, some score is increased. When that score is lower, explanations are more contrastive (and hence more understandable).
+
+
+
+% \subsection{The principles, adapted}
+% \subsubsection{Visual explanations}
+% Different types of visual explanations exist. Some examples of visual explanations are: heatmaps over the original data, partial dependence plots, and visualizations of feature importances. Due to this variety, visual explanations are not considered in this thesis.
+
+% \subsubsection{Example-based explanations}
+% An example-based explanation can have two types. Either the example shows a similar example that confirms the prediction, or the example shows a counterfactual example that explains why the prediction was not something else.
+
+% \paragraph{Fidelity} can be similar to the correctness measure from Silva et al. \cite{Silva2018}. The prediction to be explained is called $p$. Let us call the distance between $p$ and the explanation $d$. And let us define the set $S$ containing all data points (from the training set) that have distance $d$ or less to the example data point. To compute the fidelity, we first need to know whether we have a similar or counterfactual example. When the explanation is a similar example, the fidelity is the percentage of $S$ that has the same prediction as $p$. If it is a counterfactual example, the fidelity is the percentage of $S$ that has a differing prediction from $p$. If we have multiple examples in the explanation, we take the average of the fidelity for each example.
+
+% \paragraph{Completeness} can be similar to the completeness measure from Silva et al. \cite{Silva2018}. Let us again define $p$, $d$, and $S$, like we did for measuring fidelity. Now completeness is the number of elements in $S$. If there are multiple examples in the explanation, then we take the average completeness for each example.
+
+% \paragraph{Compactness} can be defined as the number of examples used.
+
+% \paragraph{Distinctiveness} is a little different in this example, because all features are used for an explanation. In this case we use the size of $d$ (as defined in fidelity) as distinctiveness. When an example is closer, it highlights the uniqueness of the prediction to be explained (as less general examples are taken).
+
+% \paragraph{Contrast} can be measured as the existence of both counterfactual and similar examples.
+
+
+% \subsubsection{Feature-relevance explanations}
+
+% \paragraph{Fidelity} Velmurugan et al. describe multiple ways of measuring fidelity \cite{Velmurugan2020}. Because in this case we do not have a surrogate model as an explanation, the only suitable measurement is the following: change features in the explanation one at a time and for each change run the model again too see how it impacts the prediction. The more a prediction changes with changing features, the higher the feature relevance should be. The drawback of this method is that it assumes feature independence. However, because testing all feature combinations is computationally too expensive, this is still the best option.
+
+% \paragraph{Completeness} Feature-relevance explanations are only applicable to one single prediction. This means the completeness axiom is not applicable in this case.
+
+% \paragraph{Compactness} For feature-relevance explanations, compactness can easily be defined as the number of features that are used in the explanation plus the number of interactions (if present). For example, if we have three features $a$, $b$, and $c$ that are assumed to be independent, compactness is three. But if these features all interact together linearly, we have components $a$, $b$, $c$, $ab$, $ac$, $bc$, and $abc$, so the compactness is seven.
+
+% \paragraph{Distinctiveness} Explanations are distinctive if they use unique features. A feature is unique if it has a value it has in only a few cases. If a feature is more unique it should have a higher attribution (both positive and negative). The way this is measured is: the values of the features are ranked on uniqueness. This means the value of a feature is compared to the values of other features and the further it deviates from the center value, the higher the uniqueness of that feature. The distinctiveness of the explanation can then be measured by quantifying the uniqueness of the features.
+
+% \paragraph{Contrast} An explanation is contrastive if its features are not close to the 'edge' of predicting something else.
+
+
+% \subsubsection{Knowledge-extraction explanations}
+
+% \paragraph{Fidelity} can be measured by feeding data points into both the black box and white box model. These can be data points with random feature values or existing data points from a training data set. The fidelity is then the percentage of data points that have the same prediction for both the black box and white box model. For local models a weight should be attached to each data point to calculate the percentage. This weight is based on the distance to the prediction to be explained.
+
+% \paragraph{Completeness} is irrelevant, because all data points can be fed into the model.
+
+% \paragraph{Compactness} as found by Silva et al. \cite{Silva2018} can be defined as the compressed size of the explanation.
+
+% \paragraph{Distinctiveness} can be measured in the same was as for feature-relevance explanations. Using a feature in this explanation class means using it in the white box model.
+
+% \paragraph{Contrast} knowledge-extraction explanations are contrastive, when there are multiple options and these options are not all be the same. This can be measured by counting the number of sets of options where all options are the same. This measure should then be as little as possible.
+
+
+
+
+
+
+
+\section{Discussion}
+
+% You can choose a citation style, 'plain' is the default
+% See:
+% https://www.overleaf.com/learn/latex/Bibtex_bibliography_styles
+\newpage
+
+\bibliographystyle{plain}
+\bibliography{references.bib}
+
+\end{document}
+
+% Have fun!
+% -fons
+
+% http://www2.washjeff.edu/users/rhigginbottom/latex/resources/symbols.pdf
