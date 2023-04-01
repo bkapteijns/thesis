@@ -2,3 +2,4 @@
 *.tsv
 data/*
 *.pkl
+!axiom_values.csv
