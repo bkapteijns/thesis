@@ -1,0 +1,220 @@
+% Deze template is gemaakt door Fons van der Plas (f.vanderplas@student.ru.nl) voor het publiek domein en mag gebruikt worden **zonder vermelding van zijn naam**.
+% This template was created by Fons van der Plas (f.vanderplas@student.ru.nl) for the public domain, and may be used **without attribution**.
+\documentclass{article}
+\usepackage[utf8]{inputenc}     % for éô
+\usepackage[english]{babel}     % for proper word breaking at line ends
+\usepackage[a4paper, left=0.5in, right=0, top=1in, bottom=0]{geometry}
+                                % for page size and margin settings
+\usepackage{graphicx}           % for ?
+\usepackage{amsmath,amssymb}    % for better equations
+\usepackage{amsthm}             % for better theorem styles
+\usepackage{mathtools}          % for greek math symbol formatting
+\usepackage{enumitem}           % for control of 'enumerate' numbering
+\usepackage{listings}           % for control of 'itemize' spacing
+\usepackage{todonotes}          % for clear TODO notes
+\usepackage{hyperref}           % page numbers and '\ref's become clickable
+
+\usepackage{pdflscape}
+
+%% THEOREM STYLES
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+
+%% MATH OPERATORS
+\DeclareMathOperator{\supersine}{supersin}
+\DeclareMathOperator{\supercosine}{supercos}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{landscape}
+
+% No contrast
+\begin{itemize}
+    \item disaster\\\includegraphics[trim={0 0 112.3cm 0}, clip, scale=0.5]{img/disaster27.png}
+    \item spam\\\includegraphics[trim={0 0 55cm, 0}, clip, scale=0.5]{img/spam98.png}\\
+        \includegraphics[trim={55cm 0 8cm, 0}, clip, scale=0.5]{img/spam98.png}
+\end{itemize}
+
+\newpage
+
+% No fidelity
+\begin{itemize}
+    \item disaster\\\includegraphics[trim={0 0 108.4cm 0}, clip, scale=0.5]{img/disaster10.png}
+    \item disaster\\\includegraphics[trim={0 0 108.4cm 0}, clip, scale=0.5]{img/disaster76.png}
+\end{itemize}
+
+\newpage
+
+% No realism
+\begin{itemize}
+    \item sentiment\\\includegraphics[trim={0 0 86.8cm 0}, clip, scale=0.5]{img/sentiment18.png}
+    \item sentiment\\\includegraphics[trim={0 0 98.8cm 0}, clip, scale=0.5]{img/sentiment45.png}
+    \item sentiment\\\includegraphics[trim={0 0 92.8cm 0}, clip, scale=0.5]{img/sentiment54.png}
+\end{itemize}
+
+\newpage
+
+% No compactness
+\begin{itemize}
+    \item spam\\\includegraphics[trim={0 0 55cm, 0}, clip, scale=0.5]{img/spam15.png}\\
+        \includegraphics[trim={55cm 0 45.3cm, 0}, clip, scale=0.5]{img/spam15.png}
+\end{itemize}
+
+\newpage
+
+% None
+\begin{itemize}
+    \item product\\\includegraphics[trim={0 0 110.6cm, 0}, clip, scale=0.5]{img/product4.png}
+    \item product\\\includegraphics[trim={0 0 122.4cm, 0}, clip, scale=0.5]{img/product9.png}
+    \item sentiment\\\includegraphics[trim={0 0 124.3cm, 0}, clip, scale=0.5]{img/sentiment47.png}
+    \item spam\\\includegraphics[trim={0 0 98.8cm, 0}, clip, scale=0.5]{img/spam1.png}
+    \item spam\\\includegraphics[trim={0 0 88.8cm, 0}, clip, scale=0.5]{img/spam97.png}
+\end{itemize}
+
+\newpage
+
+% Contrast
+\begin{itemize}
+    \item disaster\\\includegraphics[trim={0 0 106.4cm, 0}, clip, scale=0.5]{img/disaster26.png}
+    \item product\\\includegraphics[trim={0 0 71cm, 0}, clip, scale=0.5]{img/product67.png}
+    \item product\\\includegraphics[trim={0 0 110.4cm, 0}, clip, scale=0.5]{img/product79.png}
+    \item sentiment\\\includegraphics[trim={0 0 102.8cm, 0}, clip, scale=0.5]{img/sentiment5.png}
+    \item sentiment\\\includegraphics[trim={0 0 71cm, 0}, clip, scale=0.5]{img/sentiment21.png}
+    \item spam\\\includegraphics[trim={0 0 102.5cm, 0}, clip, scale=0.5]{img/spam22.png}
+\end{itemize}
+
+\newpage
+
+% Fidelity
+\begin{itemize}
+    \item disaster\\\includegraphics[trim={0 0 92.8cm, 0}, clip, scale=0.5]{img/disaster5.png}
+    \item product\\\includegraphics[trim={0 0 71cm, 0}, clip, scale=0.5]{img/product1.png}\\
+        \includegraphics[trim={49.5cm 0 37.7cm, 0}, clip, scale=0.5]{img/product1.png}\\
+    \item product\\\includegraphics[trim={0 0 55cm, 0}, clip, scale=0.5]{img/product3.png}\\
+        \includegraphics[trim={55cm 0 28cm, 0}, clip, scale=0.5]{img/product3.png}
+    \item sentiment\\\includegraphics[trim={0 0 102.8cm, 0}, clip, scale=0.5]{img/sentiment49.png}
+    \item sentiment\\\includegraphics[trim={0 0 81cm, 0}, clip, scale=0.5]{img/sentiment51.png}
+    \item spam\\\includegraphics[trim={0 0 45cm, 0}, clip, scale=0.5]{img/spam8.png}\\
+        \includegraphics[trim={47cm 0 10cm 0}, clip, scale=0.5]{img/spam8.png}
+    \item spam\\\includegraphics[trim={0 0 51cm, 0}, clip, scale=0.5]{img/spam96.png}\\
+        \includegraphics[trim={39.3cm 0 32cm, 0}, clip, scale=0.5]{img/spam96.png}
+\end{itemize}
+
+\newpage
+
+% Realism
+\begin{itemize}
+    \item disaster\\\includegraphics[trim={0 0 118.2cm, 0}, clip, scale=0.5]{img/disaster2.png}
+    \item spam\\\includegraphics[trim={0 0 100.8cm, 0}, clip, scale=0.5]{img/spam36.png}
+    \item spam\\\includegraphics[trim={0 0 85cm, 0}, clip, scale=0.5]{img/spam63.png}
+    \item spam\\\includegraphics[trim={0 0 92.8cm, 0}, clip, scale=0.5]{img/spam64.png}
+\end{itemize}
+
+\newpage
+
+% Compactness
+\begin{itemize}
+    \item disaster\\\includegraphics[trim={0 0 112.6cm, 0}, clip, scale=0.5]{img/disaster35.png}
+    \item product\\\includegraphics[trim={0 0 124.2cm, 0}, clip, scale=0.5]{img/product8.png}
+    \item product\\\includegraphics[trim={0 0 104.5cm, 0}, clip, scale=0.5]{img/product16.png}
+    \item sentiment\\\includegraphics[trim={0 0 122.3cm, 0}, clip, scale=0.5]{img/sentiment52.png}
+    \item sentiment\\\includegraphics[trim={0 0 118.4cm, 0}, clip, scale=0.5]{img/sentiment53.png}
+    \item sentiment\\\includegraphics[trim={0 0 104.8cm, 0}, clip, scale=0.5]{img/sentiment55.png}
+    \item spam\\\includegraphics[trim={0 0 67.1cm, 0}, clip, scale=0.5]{img/spam45.png}
+    \item spam\\\includegraphics[trim={0 0 79cm, 0}, clip, scale=0.5]{img/spam80.png}
+\end{itemize}
+
+\newpage
+
+% Compactness and contrast
+\begin{itemize}
+    \item disaster\\\includegraphics[trim={0 0 112.5cm, 0}, clip, scale=0.5]{img/disaster82.png}
+    \item disaster\\\includegraphics[trim={0 0 106.5cm, 0}, clip, scale=0.5]{img/disaster83.png}
+    \item disaster\\\includegraphics[trim={0 0 124.2cm, 0}, clip, scale=0.5]{img/disaster87.png}
+    \item product\\\includegraphics[trim={0 0 83cm, 0}, clip, scale=0.5]{img/product12.png}
+    \item sentiment\\\includegraphics[trim={0 0 91cm, 0}, clip, scale=0.5]{img/sentiment8.png}
+    \item sentiment\\\includegraphics[trim={0 0 94.7cm, 0}, clip, scale=0.5]{img/sentiment90.png}
+    \item sentiment\\\includegraphics[trim={0 0 107cm, 0}, clip, scale=0.5]{img/sentiment88.png}
+    \item spam\\\includegraphics[trim={0 0 70.8cm, 0}, clip, scale=0.5]{img/spam37.png}\\
+        \includegraphics[trim={55cm 0 61.3cm 0}, clip, scale=0.5]{img/spam37.png}
+\end{itemize}
+
+\newpage
+
+% Compactness and fidelity
+\begin{itemize}
+    \item disaster\\\includegraphics[trim={0 0 91cm, 0}, clip, scale=0.5]{img/disaster14.png}
+    \item product\\\includegraphics[trim={0 0 61cm, 0}, clip, scale=0.5]{img/product6.png}\\
+        \includegraphics[trim={55cm 0 41.5cm, 0}, clip, scale=0.5]{img/product6.png}
+    \item product\\\includegraphics[trim={0 0 75cm, 0}, clip, scale=0.5]{img/product11.png}
+    \item sentiment\\\includegraphics[trim={0 0 104.7cm, 0}, clip, scale=0.5]{img/sentiment84.png}
+    \item sentiment\\\includegraphics[trim={0 0 81cm, 0}, clip, scale=0.5]{img/sentiment72.png}
+    \item spam\\\includegraphics[trim={0 0 61cm, 0}, clip, scale=0.5]{img/spam91.png}\\
+        \includegraphics[trim={51.3cm 0 29.6cm, 0}, clip, scale=0.5]{img/spam91.png}
+\end{itemize}
+
+\newpage
+
+% Compactness and realism
+\begin{itemize}
+    \item disaster\\\includegraphics[trim={0 0 108.6cm, 0}, clip, scale=0.5]{img/disaster0.png}
+    \item disaster\\\includegraphics[trim={0 0 116.3cm, 0}, clip, scale=0.5]{img/disaster90.png}
+\end{itemize}
+
+\newpage
+
+% Contrast and fidelity
+\begin{itemize}
+    \item product\\\includegraphics[trim={0 0 57cm, 0}, clip, scale=0.5]{img/product28.png}\\
+        \includegraphics[trim={53cm 0 8cm 0}, clip, scale=0.5]{img/product28.png}
+    \item product\\\includegraphics[trim={0 0 61cm, 0}, clip, scale=0.5]{img/product97.png}\\
+        \includegraphics[trim={53cm 0 16cm, 0}, clip, scale=0.5]{img/product97.png}
+    \item product\\\includegraphics[trim={0 0 69cm, 0}, clip, scale=0.5]{img/product94.png}\\
+        \includegraphics[trim={53cm 0 30cm 0}, clip, scale=0.5]{img/product94.png}
+    \item spam\\\includegraphics[trim={0 0 45cm, 0}, clip, scale=0.5]{img/spam17.png}\\
+        \includegraphics[trim={51cm 0 2cm 0}, clip, scale=0.5]{img/spam17.png}
+    \item spam\\\includegraphics[trim={0 0 55cm, 0}, clip, scale=0.5]{img/spam71.png}\\
+        \includegraphics[trim={51cm 0 22cm 0}, clip, scale=0.5]{img/spam71.png}
+    \item spam\\\includegraphics[trim={0 0 65cm, 0}, clip, scale=0.5]{img/spam79.png}\\
+        \includegraphics[trim={55cm 0 20cm 0}, clip, scale=0.5]{img/spam79.png}
+\end{itemize}
+
+\newpage
+
+% Constrast and realism
+\begin{itemize}
+    \item disaster\\\includegraphics[trim={0 0 92.7cm, 0}, clip, scale=0.5]{img/disaster13.png}
+    \item disaster\\\includegraphics[trim={0 0 106.7cm, 0}, clip, scale=0.5]{img/disaster25.png}
+    \item spam\\\includegraphics[trim={0 0 69cm, 0}, clip, scale=0.5]{img/spam3.png}\\
+        \includegraphics[trim={55cm 0 63.3cm, 0}, clip, scale=0.5]{img/spam3.png}
+\end{itemize}
+
+\newpage
+
+% Fidelity and realism
+\begin{itemize}
+    \item spam\\\includegraphics[trim={0 0 61cm, 0}, clip, scale=0.5]{img/spam7.png}\\
+        \includegraphics[trim={51cm 0 12cm 0}, clip, scale=0.5]{img/spam7.png}
+    \item spam\\\includegraphics[trim={0 0 65cm 0}, clip, scale=0.5]{img/spam12.png}\\
+        \includegraphics[trim={53cm 0 25.8cm 0}, clip, scale=0.5]{img/spam12.png}
+\end{itemize}
+
+\end{landscape}
+
+\end{document}
+
+% Have fun!
+% -fons
+
+% http://www2.washjeff.edu/users/rhigginbottom/latex/resources/symbols.pdf

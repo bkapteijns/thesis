@@ -1,0 +1,178 @@
+% Deze template is gemaakt door Fons van der Plas (f.vanderplas@student.ru.nl) voor het publiek domein en mag gebruikt worden **zonder vermelding van zijn naam**.
+% This template was created by Fons van der Plas (f.vanderplas@student.ru.nl) for the public domain, and may be used **without attribution**.
+\documentclass{article}
+\usepackage[utf8]{inputenc}     % for éô
+\usepackage[english]{babel}     % for proper word breaking at line ends
+\usepackage[a4paper, left=1.5in, right=1.5in, top=1.5in, bottom=1.5in]{geometry}
+                                % for page size and margin settings
+\usepackage{graphicx}           % for ?
+\usepackage{amsmath,amssymb}    % for better equations
+\usepackage{amsthm}             % for better theorem styles
+\usepackage{mathtools}          % for greek math symbol formatting
+\usepackage{enumitem}           % for control of 'enumerate' numbering
+\usepackage{listings}           % for control of 'itemize' spacing
+\usepackage{todonotes}          % for clear TODO notes
+\usepackage{hyperref}           % page numbers and '\ref's become clickable
+
+\usepackage{pdflscape}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SET TITLE PAGE VALUES HERE %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%             ||               %
+%             ||               %
+%             \/               %
+
+\def\thesistitle{Evaluating as a human}
+\def\thesissubtitle{A functionally grounded evaluation approach to measuring human understanding}
+\def\thesisauthorfirst{Bram}
+\def\thesisauthorsecond{Kapteijns}
+\def\thesissupervisorfirst{Prof. Martha}
+\def\thesissupervisorsecond{Larson}
+\def\thesissecondreaderfirst{dr. Iris}
+\def\thesissecondreadersecond{Hendrickx}
+\def\thesisdate{June 2023}
+
+
+%             /\               %
+%             ||               %
+%             ||               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SET TITLE PAGE VALUES HERE %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% FOR PDF METADATA
+\title{\thesistitle}
+\author{\thesisauthorfirst\space\thesisauthorsecond}
+\date{\thesisdate}
+
+%% TODO PACKAGE
+\newcommand{\towrite}[1]{\todo[inline,color=yellow!10]{TO WRITE: #1}}
+
+%% THEOREM STYLES
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+
+%% MATH OPERATORS
+\DeclareMathOperator{\supersine}{supersin}
+\DeclareMathOperator{\supercosine}{supercos}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+Artificial intelligence (AI) has the ability to improve lives in many different ways. However, in many cases, it is important to be able to trust the technology and understand its limitations. For example, we do not want bias in our system. We can do this by letting the computer explain itself.
+
+During this interview, we are going to investigate when such explanations are good. It consists of two parts. During the first part, we will ask you some open-ended questions about explanations. We will learn how you would evaluate if an explanation is good in general. In the second part, we are going to investigate how you evaluate explanations in more specific cases. We are going to investigate computer-generated explanations from different domains: disaster risk management, e-commerce, spam filtering, and sentiment analysis.
+
+Before we begin, we would like to know about your experience with machine learning.
+
+\begin{itemize}
+    \item[0.] What is your current experience with machine learning?
+\end{itemize}
+
+Let us begin with the first part: investigating explanations using general questions.
+
+\\\\
+
+
+\begin{enumerate}
+    \item[1.] We just gave you a vague description of such an explanation: to convey how the computer works in order to understand and trust it; to understand why it made the predictions it did. What would such an explanation require? Or phrased in a different way: what are the characteristics of a good explanation, according to your intuition?
+
+    \item[2.] Before the interview, we found a few characteristics as well. Without having seen any explanations, can you give your considerations in ranking the following six statements? \begin{enumerate}
+        \item Explanation of a model should say what the model bases its decision on. [fidelity]
+        \item One explanation should explain as many cases as possible. [completeness]
+        \item Short explanations are generally better than long ones. [compactness]
+        \item Unique characteristics of that event should be used in an explanation. [distinctiveness]
+        \item Explanations of a prediction should mention what separated the prediction from other predictions. [contrast]
+        \item Explanations about language should take into account the actual meaning of words (also if the model does not use words' meanings)? [realistic]
+    \end{enumerate}
+
+    [Write answers down for later]
+\end{enumerate}
+
+
+\\\\
+
+For the second part of the interview, we created four artificial intelligence models in four domains: disaster risk management, e-commerce, spam filtering, and sentiment analysis. Let us first explain the use cases for each of the models.\\
+\begin{itemize}
+    \item \textbf{Disaster risk management:} Imagine there has just been a flood in Queensland, a state in Australia. You want to get the latest updates about the flood from social media. You use artificial intelligence to filter the posts, such that you get only posts that are relevant to the flood.
+    \item \textbf{E-commerce:} Imagine you have an online drop-shipping store that automatically resells books and electronics. You want your website to automatically categorize a product based on its description.
+    \item \textbf{Spam filtering:} Imagine you get a lot of text messages from robots or scammers. You do not want to filter out those messages by hand, so you use a model for that.
+    \item \textbf{Sentiment analysis:} Imagine you want to decide to buy stocks of an airline company. The diligent investor you are, you want to know what people on social media think of the company. You use an AI that automatically determines whether a review is positive or negative.
+\end{itemize}
+
+In all cases, the model takes in some text and makes a prediction on them. We want to understand how (and if) it works. To do this, we let the model explain itself. 
+
+\\\\
+
+
+\begin{enumerate}
+    \item[3.] But first, we would like to know how humans would make such an explanation. So we are putting you in the computer's place. We will give you a sentence that the computer can use to make a prediction and explain why it made that prediction. Keep in mind that for some of the sentences, the prediction may be obvious to you. But we are interested in the explanation anyway, because the AI can make mistakes in explaining predictions that are obvious to people.
+    \begin{itemize}
+        \item Are the following tweeds related to the floods in Queensland or not? Why?
+        \begin{itemize}
+            \item "Frustrations grow over lack of assistance, as flood waters recede in Australia's Queensland state." [yes]
+            \item "#flood barrier now set up in #Australia too: 1st, #Brisbane" [yes]
+            \item "So much I wanted to do today, but it was raining, so beer, haggis and whisky won out!" [no]
+            \item "Premier Campbell Newman aims to flood-proof towns in wake of Queensland ... - Herald Sun" [yes]
+            \item "I'm at Boorabbin picnic ground" [no]
+        \end{itemize}
+        \item E-commerce \begin{itemize}
+            \item ``General Studies - Paper II for Civil Services Preliminary Examination (2019)" [book]
+            \item ``Society One Minute Tea, Masala, 140g This flavoured tea, which is a mix of aromatic Indian spices is the favourite of millions of Indians. How about enjoying this special chai instantly? Now you can. In just under a minute." [book]
+            \item ``Biography: Dhirubhai Ambani" [book]
+            \item ``Frymaster 813-0035 Bronze Bunting Bushing FRYMASTER LLC 8130035 BRONZE BUSHING" [electronic]
+            \item "D-Link DHP-601AV PowerLine AV2 1000 Gigabit Starter Kit BRAND : D-Link, D-Link PowerLine AV2 1000 Gigabit Starter Kit (DHP-601AV)" [electronic]
+        \end{itemize}
+        \item Spam filtering \begin{itemize}
+            \item "Subject: are you ready to get it ?  hello !  viagra is the # 1 med to struggle with mens ' erectile dysfunction .  like one jokes sais , it is stronq enouqh for a man , but made for a woman ; - )  orderinq viaqra online is a very convinient , fast and secure way !  millions of people do it daily to save their privacy and money  order here . . ." [spam]
+            \item "Subject: 10 minutes before sex , lasts for 24 - 36 hours  legal , prescription medications under the essential guidance of licensed medical  under every stone lurks a politician .  experience is the name everyone gives to their mistakes .  without music , life would be a mistake ." [spam]
+            \item "Subject: looking for a specific medication ? let us know what you need !  healthy living for everyday life .  we rarely confide in those who are better than we are .  the words that enlighten the soul are more precious than jewels .  ignore the awful times , and concentrate on the good ones .  man is free in his imagination , but bound by his reason ." [spam]
+            \item "Subject: re : congratulations  right back at you . . . . . great job" [ham]
+            \item "Subject: good meeting  mark :  i enjoyed our meeting last tuseday very much and i look forward to calling  you again in a week or so . i think your idea of having me present to several  senior enron executives including koenig and , perhaps , jeff skilling is very  good .  i discussed this a bit with vince kaminski on thursday as well and he  expressed a strong interest in attending the meeting as well .  regards ," [ham]
+        \end{itemize}
+        \item Sentiment analysis \begin{itemize}
+            \item "Just let the employees know that good service and a kind attitude towards customers is vital in this kind of business. Thanks" [negative]
+            \item "Great flight from Phoenix to Dallas tonight! Great service and ON TIME! Makes [...] very happy!" [positive]
+            \item "where's my damn bag??" [negative]
+            \item "second time flying into Houston and 45+ mins waiting for luggage at baggage. Typical? Still waiting.." [negative]
+            \item "hey awesome!  Thanks for the reply, will be filling the form out!" [positive]
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+
+During the remainder of the interview, we will show you the explanations that the computer made. We would like to ask you to evaluate them based on how useful and understandable they are. The explanations that the computers made are the words with a color that indicates how important the word is to the prediction.
+
+\begin{enumerate}    
+    \item[4.] We will give you a few pages of explanations generated by a computer. A little explanation is needed to make clear how these explanations work. Before making the prediction, the computer removes certain abundant words (such as 'a', 'to', 'but') because they add little to the meaning of the sentence. Besides, some words are cut into two parts (indicated by the '\#\#' in front of the following parts). So eventually we have different parts of words that the computer uses to explain its prediction. The color behind a part of a word indicates how strongly that part affects the prediction of the model. Given this information, we ask you to select the best page and worst page of explanations. You are encouraged to explain your thinking process in detail (why do you prefer some explanations over others).
+
+    % \item[5.] When you understand an explanation, you are more likely to remember it. We will show you an explanation. We ask you to remember the explanation while you are doing another task.
+\end{enumerate}
+
+Now you have gotten some insights into what the computer's explanations look like. We would like to ask you the same questions as in the beginning. But this time, we ask them about the type of explanation we presented in the previous question.
+
+\begin{enumerate}
+    \item[5.] What are characteristics of good explanations of the type we presented in the last question (so with the color marking). And how would you determine/measure these characteristics. If it helps, can look at some explanations from the previous question.
+
+    \item[6.] You indicated that the characteristics [CHARACTERISTICS] are important to the quality of an explanation. Is this also the case for the type of explanation that we presented, and why? How would you measure these characteristics.
+\end{enumerate}
+
+Thank you for participating. As mentioned in the informed consent, the result can be downloaded from https://www.cs.ru.nl/bachelors-theses/ once the thesis has been completed.
+
+\end{document}
+
+% Have fun!
+% -fons
+
+% http://www2.washjeff.edu/users/rhigginbottom/latex/resources/symbols.pdf
