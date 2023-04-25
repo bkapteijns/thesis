@@ -2,8 +2,6 @@ FIDELITY:
 - Disaster 41
 - Disaster 46
 - Disaster 49
-- Sentiment 12
-- Sentiment 49
 - Product 10
 - Product 25
 - Product 26
@@ -26,7 +24,7 @@ COMPACTNESS:
 - Product 7
 - Product 16
 - Product 17
-- Product 22
+- Product 25
 - Product 28
 - Sentiment 1
 
@@ -66,3 +64,4 @@ COMPACTNESS AND FIDELITY:
 - Sentiment 12
 - Sentiment 14
 - Sentiment 28
+- Sentiment 49
