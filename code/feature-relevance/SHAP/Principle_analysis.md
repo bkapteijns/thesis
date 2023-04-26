@@ -27,6 +27,7 @@ COMPACTNESS:
 - Product 25
 - Product 28
 - Sentiment 1
+- Spam 8
 
 CONTRAST:
 - Disaster 44
@@ -35,6 +36,7 @@ CONTRAST:
 - Sentiment 29
 
 REALISM:
+- Spam 2
 
 
 CONTRAST AND COMPACTNESS:
@@ -65,3 +67,10 @@ COMPACTNESS AND FIDELITY:
 - Sentiment 14
 - Sentiment 28
 - Sentiment 49
+- Spam 1
+
+COMPACTNESS AND REALISM:
+- Spam 29
+
+FIDELITY AND REALISM:
+- Spam 9
